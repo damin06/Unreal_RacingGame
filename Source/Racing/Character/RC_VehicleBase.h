@@ -21,6 +21,8 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	virtual void Tick(float DeltaTime) override;
+
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 private:
@@ -41,19 +43,38 @@ private:
 	TObjectPtr<class UInputAction> HorizontalAction;
 
 	UPROPERTY(VisibleAnywhere, Category = Input)
+	TObjectPtr<class UInputAction> MoveAction;
+
+	UPROPERTY(VisibleAnywhere, Category = Input)
 	TObjectPtr<class UInputAction> LookAction;
 
 	UPROPERTY(VisibleAnywhere, Category = Input)
 	TObjectPtr<class UInputAction> HandBreakAction;
 
+	UPROPERTY(VisibleAnywhere, Category = Input)
+	TObjectPtr<class UInputAction> GearChangeAction;
+
 private:
-	void ApplyAcceleration(const FInputActionValue& Value);
-	void ApplySteering(const FInputActionValue& Value);
+	void ApplyMove(const FInputActionValue& Value);
+
+	void ApplyAcceleration(float InputValue);
+	void ApplySteering(float InputValue);
 
 	void Look(const FInputActionValue& Value);
 
 	void OnHandBreakPressed();
 	void OnHandBreakReleased();
 
-	void UpdateInAirControl(float DeltaTime);
+	void OnBreakPresse();
+	void OnBreakReleased();
+	void SetBreak(float Value);
+	void OnGearChange(const FInputActionValue& Value);
+
+	void DecelerateCar();
+	void ResetSteeringAngle();
+
+private:
+
+	float ThrottleAxis;
+	float SteeringAxis;
 };
